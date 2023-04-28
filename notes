@@ -1,0 +1,6 @@
+https://www.springboottutorial.com/spring-boot-and-h2-in-memory-database
+
+fails:
+1. wrong format in sql file using ' instead "
+2. in Repository component the Query annotation didn't use native query specification
+3. adjust new jdk version in java.home inside settings.json file
