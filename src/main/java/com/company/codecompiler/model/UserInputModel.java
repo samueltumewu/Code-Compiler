@@ -6,13 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Component
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Component
-public class RequestModel {
-    private String clientId;
-    private String clientSecret;
+public class UserInputModel {
     private String script;
     private String language;
     private String versionIndex;
