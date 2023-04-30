@@ -1,19 +1,24 @@
 package com.company.codecompiler.model;
 
+import java.util.LinkedList;
+
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Component
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResponseModel {
-    private String output;
-    private String statusCode;
-    private String memory;
-    private String cpuTime;
-    private String compilationStatus;
+    private String returnCode;
+    private Long assesmentId;
+    private String assesmentTitle;
+    private LinkedList<String> message = new LinkedList<String>();
+
+    public void addMessages(String msg){
+        message.add(msg);
+    }
 }
