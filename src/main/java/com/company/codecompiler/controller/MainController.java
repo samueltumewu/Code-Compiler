@@ -16,6 +16,8 @@ import com.company.codecompiler.model.ResponseModel;
 import com.company.codecompiler.model.UserInputModel;
 import com.company.codecompiler.service.AssesmentService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 public class MainController {
@@ -34,7 +36,7 @@ public class MainController {
 
     @PostMapping("/assesment/evaluate")
     public ResponseEntity<ResponseModel> evaluateCode(
-        @RequestBody UserInputModel userInputModel
+        @Valid @RequestBody UserInputModel userInputModel
     ) throws Exception
     {
         ResponseModel responseModel = assesmentService.evaluateCode(userInputModel);
