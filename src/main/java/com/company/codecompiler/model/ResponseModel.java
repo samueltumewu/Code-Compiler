@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResponseModel {
     private String returnCode;
+    private LinkedList<String> message = new LinkedList<String>();
     private Long assesmentId;
     private String assesmentTitle;
-    private LinkedList<String> message = new LinkedList<String>();
 
     public void addMessages(String msg){
         message.add(msg);
