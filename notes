@@ -4,3 +4,7 @@ fails:
 1. wrong format in sql file using ' instead "
 2. in Repository component the Query annotation didn't use native query specification
 3. adjust new jdk version in java.home inside settings.json file
+3. java filename cannot duplicated with the package name
+4. global handler class not necessary to extends ResponseEntityExceptionHandler if inside the class have independent annotation declarations for each handler functions
+5. using EnableAutoConfiguration to avoid ConfigServletWebServerApplicationContext Exception 'dataSourceScriptDatabaseInitializer'
+6. at spring boot above 2.7 there is primary key conflict when using H2 database. In order to avoid this issue, must use "default" id in the insert sql statement in data.sql file
