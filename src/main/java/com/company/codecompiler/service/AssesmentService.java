@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,16 @@ public class AssesmentService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${jdoodle.compiler.url}")
+    private String URL_STRING;
+    @Value("${jdoodle.client.id}")
+    private String CLIENT_ID;
+    @Value("${jdoodle.client.secret}")
+    private String CLIENT_SECRET;
+    @Value("${return.code.1}")
+    private String RETURN_CODE_1;
+    @Value("${return.code.2}")
+    private String RETURN_CODE_2;
     
     public List<Assesment> fetchAllAssesments() {
         return assesmentRepo.findAll();
@@ -41,9 +52,6 @@ public class AssesmentService {
         return assesmentRepo.findByQuestionTitle(questionTitle);
     }
     
-    private static final String URL_STRING = "https://api.jdoodle.com/v1/execute";
-    private static final String CLIENT_ID = "12cfa10c00d6e1ea65f2cc956a9e9ca7";
-    private static final String CLIENT_SECRET = "52d28354db69fb1a4b6837454c2194278b7e616f129aa032526f8c09b042dd84";
     public ResponseModel evaluateCode(UserInputModel userInputModel) throws Exception 
     {
         URI urlURI = new URI(URL_STRING);
@@ -66,14 +74,13 @@ public class AssesmentService {
             ResponseModel responseModel = checkTestCase(requestModel);
             responseModel.setAssesmentId(userInputModel.getAssesmentId());
             responseModel.setAssesmentTitle(fetchAssesmentById(responseModel.getAssesmentId()).getQuestionTitle());
-            responseModel.setReturnCode("A-001");
+            responseModel.setReturnCode(RETURN_CODE_1);
             return responseModel;
         } else {
-            System.out.println("Syntax Error");
             String syntaxErrorDetails = responseJdoodle.getBody().getOutput();
             ResponseModel responseModel = new ResponseModel();
             responseModel.addMessages("Syntax Error: " + syntaxErrorDetails);
-            responseModel.setReturnCode("A-002");
+            responseModel.setReturnCode(RETURN_CODE_1);
             return responseModel;
         }
 
@@ -99,9 +106,7 @@ public class AssesmentService {
             URI urlURI = new URI(URL_STRING);
             HttpEntity<RequestModel> requestHttpEntity = new HttpEntity<RequestModel>(testCaseRequestModel);
             ResponseEntity<ResponseModelJdoodle> response = restTemplate.exchange(urlURI, HttpMethod.POST, requestHttpEntity, ResponseModelJdoodle.class);
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>");
-            System.out.println("response.getbody: "+response.getBody().getOutput().toString());
-
+            
             testCaseResponseOutput.add(response.getBody().getOutput().toString().strip());
         }
 

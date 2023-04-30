@@ -3,6 +3,7 @@ package com.company.codecompiler.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,9 @@ public class MainController {
     @Autowired
     private AssesmentService assesmentService;
 
+    @Value("${return.code.1}")
+    private String RETURN_CODE_1;
+
     @GetMapping("/assesment/{questionTitle}")
     public List<Assesment> getAllAssesmentByQuestionTitle(
         @PathVariable("questionTitle") String questionTitle) 
@@ -34,7 +38,7 @@ public class MainController {
     ) throws Exception
     {
         ResponseModel responseModel = assesmentService.evaluateCode(userInputModel);
-        if (responseModel != null && responseModel.getReturnCode().equals("A-001"))
+        if (responseModel != null && responseModel.getReturnCode().equals(RETURN_CODE_1))
             return ResponseEntity.ok().body(responseModel);
         return ResponseEntity.badRequest().body(responseModel);
     }
