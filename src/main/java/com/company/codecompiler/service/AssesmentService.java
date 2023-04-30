@@ -65,13 +65,12 @@ public class AssesmentService {
             userInputModel.getAssesmentId()); 
 
         HttpEntity<RequestModel> requestHttpEntity = new HttpEntity<RequestModel>(requestModel);
-        // System.out.println("ini-requestHttpentity:"+requestHttpEntity.toString());
 
         ResponseEntity<ResponseModelJdoodle> responseJdoodle = restTemplate.exchange(urlURI, HttpMethod.POST, requestHttpEntity, ResponseModelJdoodle.class);
-        // System.out.println("ini-response:" + response.getBody().getOutput().toString());
 
         if (responseJdoodle.getBody().getCpuTime() != null) {
             ResponseModel responseModel = checkTestCase(requestModel);
+            responseModel.addMessages("Code Output: " + responseJdoodle.getBody().getOutput().toString());
             responseModel.setAssesmentId(userInputModel.getAssesmentId());
             responseModel.setAssesmentTitle(fetchAssesmentById(responseModel.getAssesmentId()).getQuestionTitle());
             responseModel.setReturnCode(RETURN_CODE_1);
@@ -106,7 +105,7 @@ public class AssesmentService {
             URI urlURI = new URI(URL_STRING);
             HttpEntity<RequestModel> requestHttpEntity = new HttpEntity<RequestModel>(testCaseRequestModel);
             ResponseEntity<ResponseModelJdoodle> response = restTemplate.exchange(urlURI, HttpMethod.POST, requestHttpEntity, ResponseModelJdoodle.class);
-            
+
             testCaseResponseOutput.add(response.getBody().getOutput().toString().strip());
         }
 
