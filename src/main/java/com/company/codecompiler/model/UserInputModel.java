@@ -17,10 +17,10 @@ public class UserInputModel {
     private String script;
     @NotBlank(message = "language is mandatory")
     private String language;
-    @NotBlank(message = "version index is mandatory")
+    @NotBlank(message = "versionIndex is mandatory")
     private String versionIndex;
     @NotBlank(message = "stdin is mandatory")
     private String stdin;
-    @NotNull(message = "assesment id is mandatory")
+    @NotNull(message = "assesmentId is mandatory")
     private Long assesmentId;
 }

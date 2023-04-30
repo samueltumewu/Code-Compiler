@@ -27,11 +27,32 @@ public class MainController {
     @Value("${return.code.1}")
     private String RETURN_CODE_1;
 
-    @GetMapping("/assesment/{questionTitle}")
-    public List<Assesment> getAllAssesmentByQuestionTitle(
+    @GetMapping("/assesment/title/{questionTitle}")
+    public ResponseEntity<ResponseModel> getAllAssesmentByQuestionTitle(
         @PathVariable("questionTitle") String questionTitle) 
     {
-        return assesmentService.fetchAllAssesmentsByQuestionTitle(questionTitle);
+        Assesment assesment = assesmentService.fetchAllAssesmentsByQuestionTitle(questionTitle);
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setReturnCode(RETURN_CODE_1);
+        if (assesment != null)
+            responseModel.addMessages(assesment.toString());
+        else
+            responseModel.addMessages("Data not found!");
+        return ResponseEntity.ok().body(responseModel);
+    }
+
+    @GetMapping("/assesment/id/{questionId}")
+    public ResponseEntity<ResponseModel> getAssesmentById(
+        @PathVariable("questionId") Long questionId) 
+    {
+        Assesment assesment = assesmentService.fetchAssesmentById(questionId);
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setReturnCode(RETURN_CODE_1);
+        if (!assesment.toString().isEmpty())
+            responseModel.addMessages(assesment.toString());
+        else
+            responseModel.addMessages("Data not found!");
+        return ResponseEntity.ok().body(responseModel);
     }
 
     @PostMapping("/assesment/evaluate")
@@ -45,4 +66,15 @@ public class MainController {
         return ResponseEntity.badRequest().body(responseModel);
     }
 
+    @PostMapping("/assesment/")
+    public ResponseEntity<ResponseModel> addNewAssesment(
+        @Valid @RequestBody Assesment assesment
+    ) throws Exception
+    {
+        String resultString = assesmentService.addNewAssesment(assesment);
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setReturnCode(RETURN_CODE_1);
+        responseModel.addMessages(resultString);
+        return ResponseEntity.ok().body(responseModel);
+    }
 }

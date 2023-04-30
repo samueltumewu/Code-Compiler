@@ -1,12 +1,14 @@
 package com.company.codecompiler.service;
 
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -48,8 +50,14 @@ public class AssesmentService {
         return assesmentRepo.findById(id).get();
     }
 
-    public List<Assesment> fetchAllAssesmentsByQuestionTitle(String questionTitle) {
+    public Assesment fetchAllAssesmentsByQuestionTitle(String questionTitle) {
         return assesmentRepo.findByQuestionTitle(questionTitle);
+    }
+
+    public String addNewAssesment(Assesment assesmentEntity) throws SQLException{
+        Assesment assesment = assesmentRepo.save(assesmentEntity);
+        String returnNotice = "Question title: " + assesment.getQuestionTitle().toString() + ", successfully saved with id: " + assesment.getId();
+        return returnNotice;
     }
     
     public ResponseModel evaluateCode(UserInputModel userInputModel) throws Exception 
@@ -79,7 +87,7 @@ public class AssesmentService {
             String syntaxErrorDetails = responseJdoodle.getBody().getOutput();
             ResponseModel responseModel = new ResponseModel();
             responseModel.addMessages("Syntax Error: " + syntaxErrorDetails);
-            responseModel.setReturnCode(RETURN_CODE_1);
+            responseModel.setReturnCode(RETURN_CODE_2);
             return responseModel;
         }
 
@@ -112,12 +120,10 @@ public class AssesmentService {
         ResponseModel responseModel = new ResponseModel();
         for(int i=0; i<testCases.size(); i++) {
             if (testCases.values().toArray()[i].equals(testCaseResponseOutput.get(i))) {
-                System.out.println("test case #" + i + ": " + "passed");
                 String testCaseResultString = "test case #" + i + ": " + "passed";
                 responseModel.addMessages(testCaseResultString);
             }
             else {
-                System.out.println("test case #" + i + ": " + "failed");
                 String testCaseResultString = "test case #" + i + ": " + "failed";
                 responseModel.addMessages(testCaseResultString);
             }
